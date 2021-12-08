@@ -16,4 +16,4 @@ The file structure is  like this before generating tfrecords:
 
 The final file structure should look like this:
 
-![file structure](cv_mercury_final_project/file_structure.png?raw=true "File Structure")
+![file structure](/file_structure.png?raw=true "File Structure")
