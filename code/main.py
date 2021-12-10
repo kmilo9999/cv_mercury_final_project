@@ -55,7 +55,7 @@ def main():
         # TODO: Draw hands
         # collision_detection(num, boxes, scores, objects)
 
-        # TODO: Draw bubble overlays
+        # TODO: Draw game objects overlays
         # overlay_drawer.draw_overlay()
 
         # Display the resulting frame
