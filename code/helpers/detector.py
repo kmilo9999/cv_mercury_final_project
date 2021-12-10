@@ -42,7 +42,7 @@ def detect_hands(img, graph, session):
     return boxes, scores, classes, num
 
 
-def collide_objects(num_hands, boxes, scores, objects):
+def collide_objects(num_hands, boxes, scores, objects, img):
     """
     Function that accounts for object collision, and returns a list of remaining objects
     Parameters:
@@ -50,6 +50,7 @@ def collide_objects(num_hands, boxes, scores, objects):
         boxes: Detection boxes for the hand
         scores: Detection scores for the hand
         objects: List of tuples of coordinates and radius of objects (x, y, r)
+        img: Image to detect hands in
     Returns:
         List of remaining objects
     """
@@ -69,5 +70,8 @@ def collide_objects(num_hands, boxes, scores, objects):
             for obj in objects:
                 if (center_x - obj[0]) ** 2 + (center_y - obj[1]) ** 2 < obj[2] ** 2:
                     objects.remove(obj)
+            
+            # Draws a rectangle around the hand
+            cv2.rectangle(img, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 255, 0), 2)
 
     return objects

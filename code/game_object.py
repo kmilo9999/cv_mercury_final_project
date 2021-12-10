@@ -12,7 +12,7 @@ class game_object:
     
     def draw(self, screen_buffer, alpha):
         posy = self.position[1]+self.text_width
-        posx = self.position[0]+ self.text_heigh
+        posx = self.position[0]+ self.text_height
         added_image = cv2.addWeighted(screen_buffer[self.position[0]:posx,
                         self.position:posy,:],alpha,self.texture,1-alpha,0)
         screen_buffer[self.position[0]:posx,self.position[1]:posy,:] = added_image

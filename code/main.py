@@ -3,6 +3,7 @@ from skimage import io
 from pathlib import Path
 import numpy as np
 import argparse
+import random
 import game_object
 
 from helpers.detector import load_checkpoint, detect_hands, collide_objects
@@ -44,19 +45,21 @@ def main():
     # Read until video is completed
     while(cap.isOpened()):
         # Capture frame-by-frame
-        ret, frame = cap.read()
+        _, frame = cap.read()
         
         # Convert to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        # TODO: Detect hands
         boxes, scores, _, num = detect_hands(frame, graph, session)
 
-        # TODO: Draw hands
-        # collision_detection(num, boxes, scores, objects)
+        scene_objects = collide_objects(num, boxes, scores, scene_objects, frame)
 
-        # TODO: Draw game objects overlays
-        # overlay_drawer.draw_overlay()
+        # Moves the object at random directions with 2D matrix where 1 is right and -1 is left
+        for object in scene_objects:
+            # TODO: Initialize position to move the object
+            object.move()
+            # TODO: Pass in arguments into the draw method
+            object.draw()
 
         # Display the resulting frame
         cv2.imshow('Hand Detection', frame)
