@@ -3,6 +3,7 @@ from skimage import io
 from pathlib import Path
 import numpy as np
 import argparse
+import game_object
 
 from helpers.detector import load_checkpoint, detect_hands, collide_objects
 # import overlay_drawer
@@ -14,6 +15,9 @@ def main():
     parser.add_argument('--width', type=int, default=640, help='Width of the video')
     parser.add_argument('--height', type=int, default=480, help='Height of the video')
     args = parser.parse_args()
+
+    #list of game objects
+    scene_objects = []
 
     # Create a VideoCapture object and read from input file
     # If the input is the camera, pass 0 instead of the video file name
@@ -100,5 +104,3 @@ def main():
 #     img[up_posx_1:up_posx_2,up_posy_1:up_posy_2,:] = added_image_button
 
 #     cv2.imshow("Image",img)
-
-
