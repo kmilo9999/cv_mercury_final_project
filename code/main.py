@@ -2,7 +2,7 @@ import cv2
 from skimage import io
 from pathlib import Path
 import numpy as np
-
+import game_object
 import overlay_drawer
 
 
@@ -23,6 +23,9 @@ left_height,left_width,channels = controller_left.shape
 button_height,button_width,channels = controller_button.shape
 
 print(controller_right.shape)
+
+#list of game objects
+scene_objects = []
 
 alpha = 0.01
 #PRESS 'ESC' TO CLOSE THE WINDOW 
