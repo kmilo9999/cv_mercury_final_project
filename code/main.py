@@ -51,6 +51,12 @@ from helpers.detector import load_checkpoint, detect_hands, collide_objects
 # import overlay_drawer
 #MODEL_PATH = os.path.sep.join([BASE_OUTPUT, "detector.h5"])
 
+
+def change_range(value, old_min,old_max, new_min,new_max):     
+    NewValue = (((value - old_min) * (new_max - new_min)) / (old_max - old_min)) + new_min
+    return NewValue
+
+
 def main():
     parser = argparse.ArgumentParser(description='Running the hand detection with game overlay')
     parser.add_argument('--fps', type=int, default=1, help='FPS of the video')
@@ -110,7 +116,7 @@ def main():
     while cv2.waitKey(1) !=27:
         # Capture frame-by-frame
         _, frame = cap.read()
-        
+        frame = cv2.flip(frame,1)
         # Convert to RGB
         #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         #print("###########")
@@ -127,11 +133,22 @@ def main():
        
         preds = model.predict(image)[0]   
         (startX, startY, endX, endY) = preds
-        int_startX = int(startX * 224)
-        int_startY = int(startY * 224)
-        int_endX = int(endX * 224)
-        int_endY = int(endY * 224)
-        cv2.rectangle(frame,(int_endX,int_endY),(int_startX,int_startY),(0,255,0),3)
+        int_startX = startX * 224
+        int_startY = startY * 224
+        int_endX = endX * 224
+        int_endY = endY * 224
+
+        # new_startX = int(change_range(int_startX,0,224,0,1280))
+        # new_startY = int(change_range(int_startY,0,224,0,720))
+        # new_endX = int(change_range(int_endX,0,224,0,1280))
+        # new_endY = int(change_range(int_endY,0,224,0,720))
+
+        new_startX = int(int_startX * 5.714)
+        new_startY = int(int_startY * 3.21)
+        new_endX = int(int_endX * 5.714)
+        new_endY = int(int_endY * 3.21)
+
+        cv2.rectangle(frame,(new_endX,new_endY),(new_startX,new_startY),(0,255,0),3)
         #boxes, scores, _, num = detect_hands(frame, graph, session)
 
         #scene_objects = collide_objects(num, boxes, scores, scene_objects, frame)
