@@ -90,11 +90,9 @@ def main():
         # Convert to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        boxes, scores, _, num = detect_hands(frame, graph, session)
+        boxes, scores = detect_hands(frame, graph, session)
 
-        print(boxes, scores, _, num)
-
-        # scene_objects = collide_objects(num, boxes, scores, scene_objects, frame)
+        collide_objects(1, boxes, scores, scene_objects, frame)
 
         # Moves the object at random directions with 2D matrix where 1 is right and -1 is left
         # for object in scene_objects:
@@ -149,3 +147,7 @@ def main():
 #     img[up_posx_1:up_posx_2,up_posy_1:up_posy_2,:] = added_image_button
 
 #     cv2.imshow("Image",img)
+
+
+if __name__ == '__main__':
+    main()

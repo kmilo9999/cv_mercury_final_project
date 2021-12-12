@@ -2,8 +2,6 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-CHKPOINT_PATH = ''
-
 def load_checkpoint():
     """
     Loads the checkpoint file.
@@ -16,7 +14,7 @@ def load_checkpoint():
             serialized_graph = fid.read()
             od_graph_def.ParseFromString(serialized_graph)
             tf.import_graph_def(od_graph_def, name='')
-        sess = tf.compat.v1.Session(graph=detection_graph)
+        sess = tf.Session(graph=detection_graph)
     return detection_graph, sess
 
 
@@ -41,7 +39,7 @@ def detect_hands(img, graph, session):
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: np.expand_dims(img, axis=0)})
 
-    return np.squeeze(boxes), np.squeeze(scores)
+    return boxes, scores, classes, num
 
 
 def collide_objects(num_hands, boxes, scores, objects, img):
