@@ -6,6 +6,22 @@ from game_object import game_object
 import overlay_drawer
 import argparse
 import random
+import os
+
+import tensorflow as tfs
+
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.layers import Flatten
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Input
+from tensorflow.keras.models import Model
+from tensorflow.keras.models import load_model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing import image
+from sklearn.model_selection import train_test_split
+
 
 from helpers.detector import load_checkpoint, detect_hands, collide_objects
 
@@ -33,6 +49,7 @@ from helpers.detector import load_checkpoint, detect_hands, collide_objects
 #     cv2.imshow("Image",screen_buffer)
 
 # import overlay_drawer
+#MODEL_PATH = os.path.sep.join([BASE_OUTPUT, "detector.h5"])
 
 def main():
     parser = argparse.ArgumentParser(description='Running the hand detection with game overlay')
@@ -41,7 +58,7 @@ def main():
     parser.add_argument('--width', type=int, default=1280, help='Width of the video')
     parser.add_argument('--height', type=int, default=720, help='Height of the video')
     args = parser.parse_args()
-
+    print("HERE11111")
     #list of game objects
     scene_objects = []
 
@@ -49,11 +66,11 @@ def main():
 
     # Create a VideoCapture object and read from input file
     # If the input is the camera, pass 0 instead of the video file name
-    cap = cv2.VideoCapture(args.video)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
-    cap.set(cv2.CAP_PROP_FPS, args.fps)
-
+    cap = cv2.VideoCapture(0)
+    #cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
+    #cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
+    #cap.set(cv2.CAP_PROP_FPS, args.fps)
+    print("HERE11122")
     # Check if camera opened successfully
     if (cap.isOpened() == False):
         print("Error opening video stream or file")
@@ -67,7 +84,7 @@ def main():
     # Name window
     cv2.namedWindow('Hand Detection', cv2.WINDOW_NORMAL)
     cv2.resizeWindow('Hand Detection', img_width, img_height)
-    graph, session = load_checkpoint()
+    #graph, session = load_checkpoint()
 
     #init scene objects
     for i in range(3):
@@ -81,33 +98,58 @@ def main():
 
     alpha = 0.01
 
+    # trained model
+    model = load_model("detector.h5")
+    print("############")
+    print(model)
+    print("############")
 
     # Read until video is completed
-    while(cap.isOpened()):
+    #while(cap.isOpened()):
+    print("HERE11111")
+    while cv2.waitKey(1) !=27:
         # Capture frame-by-frame
         _, frame = cap.read()
         
         # Convert to RGB
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        #frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        #print("###########")
+        #print(frame.shape)
+        #print("frame.shape")
+        image = cv2.resize(frame,(224,224))
+        #print("###########")
+        #print(image.shape)
+        #print("image.shape")
 
+        image = img_to_array(image) / 255.0
+        image = np.expand_dims(image, axis=0)
+
+       
+        preds = model.predict(image)[0]   
+        (startX, startY, endX, endY) = preds
+        int_startX = int(startX * 224)
+        int_startY = int(startY * 224)
+        int_endX = int(endX * 224)
+        int_endY = int(endY * 224)
+        cv2.rectangle(frame,(int_endX,int_endY),(int_startX,int_startY),(0,255,0),3)
         #boxes, scores, _, num = detect_hands(frame, graph, session)
 
         #scene_objects = collide_objects(num, boxes, scores, scene_objects, frame)
 
         # Moves the object at random directions with 2D matrix where 1 is right and -1 is left
-        for object in scene_objects:
-            # TODO: Initialize position to move the object
-            object.move()
-            # TODO: Pass in arguments into the draw method
-            object.draw(frame,alpha)
+        #for object in scene_objects:
+        ##    # TODO: Initialize position to move the object
+        #    object.move()
+        #    # TODO: Pass in arguments into the draw method
+        #    object.draw(frame,alpha)
 
         # Display the resulting frame
         cv2.imshow('Hand Detection', frame)
 
         # Press Q on keyboard to  exit
-        if cv2.waitKey(25) & 0xFF == ord('q'):
-            cv2.destroyAllWindows()
-            break
+        #if cv2.waitKey(25) & 0xFF == ord('q'):
+        #    cv2.destroyAllWindows()
+        #    break
 
 # video_cap = cv2.VideoCapture(0)
 # video_cap.set(cv2.CAP_PROP_FRAME_WIDTH ,1280)
@@ -147,3 +189,5 @@ def main():
 #     img[up_posx_1:up_posx_2,up_posy_1:up_posy_2,:] = added_image_button
 
 #     cv2.imshow("Image",img)
+if __name__ == "__main__":
+    main()
