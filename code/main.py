@@ -7,7 +7,7 @@ import overlay_drawer
 import argparse
 import random
 
-from helpers.detector import load_checkpoint, detect_hands, collide_objects
+from handtracking.helpers.detector import load_checkpoint, detect_hands, collide_objects
 
 # video_cap = cv2.VideoCapture(0)
 # video_cap.set(cv2.CAP_PROP_FRAME_WIDTH ,1280)
@@ -90,16 +90,18 @@ def main():
         # Convert to RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-        #boxes, scores, _, num = detect_hands(frame, graph, session)
+        boxes, scores, _, num = detect_hands(frame, graph, session)
 
-        #scene_objects = collide_objects(num, boxes, scores, scene_objects, frame)
+        print(boxes, scores, _, num)
+
+        # scene_objects = collide_objects(num, boxes, scores, scene_objects, frame)
 
         # Moves the object at random directions with 2D matrix where 1 is right and -1 is left
-        for object in scene_objects:
-            # TODO: Initialize position to move the object
-            object.move()
-            # TODO: Pass in arguments into the draw method
-            object.draw(frame,alpha)
+        # for object in scene_objects:
+        #     # TODO: Initialize position to move the object
+        #     object.move()
+        #     # TODO: Pass in arguments into the draw method
+        #     object.draw(frame,alpha)
 
         # Display the resulting frame
         cv2.imshow('Hand Detection', frame)
