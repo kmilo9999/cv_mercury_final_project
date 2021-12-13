@@ -7,7 +7,7 @@ import overlay_drawer
 import argparse
 import random
 
-from handtracking.helpers.detector import load_checkpoint, detect_hands, collide_objects
+from helpers.detector import load_checkpoint, detect_hands, draw_box_on_image, collide_objects
 
 # video_cap = cv2.VideoCapture(0)
 # video_cap.set(cv2.CAP_PROP_FRAME_WIDTH ,1280)
@@ -92,8 +92,8 @@ def main():
 
         boxes, scores = detect_hands(frame, graph, session)
 
-        collide_objects(1, boxes, scores, scene_objects, frame)
-
+        collide_objects(2, boxes, scores, scene_objects, frame, img_width, img_height)
+        
         # Moves the object at random directions with 2D matrix where 1 is right and -1 is left
         # for object in scene_objects:
         #     # TODO: Initialize position to move the object

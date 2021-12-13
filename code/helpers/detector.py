@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
+CHKPOINT_PATH = '/Users/brianedmund/Desktop/Git/CSCI1430/cv_mercury_final_project/code/handtracking/hand_inference/frozen_inference_graph.pb'
+
 def load_checkpoint():
     """
     Loads the checkpoint file.
@@ -14,7 +16,7 @@ def load_checkpoint():
             serialized_graph = fid.read()
             od_graph_def.ParseFromString(serialized_graph)
             tf.import_graph_def(od_graph_def, name='')
-        sess = tf.Session(graph=detection_graph)
+        sess = tf.compat.v1.Session(graph=detection_graph)
     return detection_graph, sess
 
 
@@ -39,10 +41,10 @@ def detect_hands(img, graph, session):
         [detection_boxes, detection_scores, detection_classes, num_detections],
         feed_dict={image_tensor: np.expand_dims(img, axis=0)})
 
-    return boxes, scores, classes, num
+    return np.squeeze(boxes), np.squeeze(scores)
 
 
-def collide_objects(num_hands, boxes, scores, objects, img):
+def collide_objects(num_hands, boxes, scores, objects, img, width, height):
     """
     Function that accounts for object collision, and returns a list of remaining objects
     Parameters:
@@ -58,20 +60,17 @@ def collide_objects(num_hands, boxes, scores, objects, img):
         # Checks if the score is above the threshold
         if scores[i] > 0.5:
             # Gets the bounding box coordinates
-            ymin, xmin, ymax, xmax = boxes[i]
-            # Gets the bounding box dimensions
-            h = ymax - ymin
-            w = xmax - xmin
-            # Gets the center of the bounding box
-            center_x = xmin + (w / 2)
-            center_y = ymin + (h / 2)
-            # Checks if the center of the bounding box is within the radius of the object
-            # If it is, then the object is removed
-            for obj in objects:
-                if (center_x - obj[0]) ** 2 + (center_y - obj[1]) ** 2 < obj[2] ** 2:
-                    objects.remove(obj)
-            
+            (left, right, top, bottom) = (boxes[i][1] * width, boxes[i][3] * width,
+                                          boxes[i][0] * height, boxes[i][2] * height)
             # Draws a rectangle around the hand
-            cv2.rectangle(img, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 255, 0), 2)
+            cv2.rectangle(img, (int(left), int(top)), (int(right), int(bottom)), (255, 0, 0), 2)
+            # Gets the center of the bounding box
+            center_x = (left + right) / 2
+            center_y = (top + bottom) / 2
+            # Checks if the center of the bounding box is within the radius of any object
+            # for obj in objects:
+            #     if (center_x - obj[0]) ** 2 + (center_y - obj[1]) ** 2 < obj[2] ** 2:
+            #         # Removes the object
+            #         objects.remove(obj)
 
     return objects
