@@ -58,7 +58,7 @@ def collide_objects(num_hands, boxes, scores, objects, img, width, height):
     """
     for i in range(num_hands):
         # Checks if the score is above the threshold
-        if scores[i] > 0.5:
+        if scores[i] > 0.4:
             # Gets the bounding box coordinates
             (left, right, top, bottom) = (boxes[i][1] * width, boxes[i][3] * width,
                                           boxes[i][0] * height, boxes[i][2] * height)
@@ -67,10 +67,10 @@ def collide_objects(num_hands, boxes, scores, objects, img, width, height):
             # Gets the center of the bounding box
             center_x = (left + right) / 2
             center_y = (top + bottom) / 2
-            # Checks if the center of the bounding box is within the radius of any object
-            # for obj in objects:
-            #     if (center_x - obj[0]) ** 2 + (center_y - obj[1]) ** 2 < obj[2] ** 2:
-            #         # Removes the object
-            #         objects.remove(obj)
+            # Checks if the center of the bounding box is within the rectangle of the object
+            for obj in objects:
+                posx1, posy1, posx2, posy2 = obj.get_rectangle()
+                if center_x > posx1 and center_x < posx2 and center_y > posy1 and center_y < posy2:
+                    objects.remove(obj)
 
     return objects

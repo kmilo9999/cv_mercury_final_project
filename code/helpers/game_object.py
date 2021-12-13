@@ -24,7 +24,9 @@ class game_object:
             self.direction = direction
         self.position = self.position + self.direction * self.speed
 
-    def get_bounding_sphere(self):
-        return self.position,self.radius
-        
-    
+    def get_rectangle(self):
+        posy2 = int(self.position[1]+self.text_width)
+        posx2 = int(self.position[0]+ self.text_height)
+        posx1 = int(self.position[0])
+        posy1 = int(self.position[1])
+        return posx1, posy1, posx2, posy2
