@@ -49,7 +49,7 @@ def main():
 
     # Create a VideoCapture object and read from input file
     # If the input is the camera, pass 0 instead of the video file name
-    cap = cv2.VideoCapture(args.video)
+    cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.height)
     cap.set(cv2.CAP_PROP_FPS, args.fps)
