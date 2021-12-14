@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-CHKPOINT_PATH = '/Users/brianedmund/Desktop/Git/CSCI1430/cv_mercury_final_project/code/handtracking/hand_inference/frozen_inference_graph.pb'
+CHKPOINT_PATH = 'C:\\Users\\Kmilo\\Documents\\cs1430\\cv_mercury_final_project\\code\\handtracking\\hand_inference\\frozen_inference_graph.pb'
 
 def load_checkpoint():
     """
@@ -56,7 +56,9 @@ def collide_objects(num_hands, boxes, scores, objects, img, width, height):
     Returns:
         List of remaining objects
     """
-    for i in range(num_hands):
+    #for i in range(num_hands):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    for i in range(1):
         # Checks if the score is above the threshold
         if scores[i] > 0.4:
             # Gets the bounding box coordinates
@@ -65,12 +67,29 @@ def collide_objects(num_hands, boxes, scores, objects, img, width, height):
             # Draws a rectangle around the hand
             cv2.rectangle(img, (int(left), int(top)), (int(right), int(bottom)), (255, 0, 0), 2)
             # Gets the center of the bounding box
-            center_x = (left + right) / 2
-            center_y = (top + bottom) / 2
-            # Checks if the center of the bounding box is within the rectangle of the object
+            center_x = (left + right) // 2
+            center_y = (top + bottom ) // 2 
+            str_HandPos = ""+str(int(left))+","+ str(int(top))+" "+str(int(right))+","+ str(int(bottom))
+            str_center_Hand = ""+ str(format(center_x, '.2f')) + "," + str(format(center_y,'.2f'))
+            cv2.circle(img, (int(center_x),int(center_y)), 5, (0,255,0), 2)
+            cv2.putText(img, 
+                str_HandPos, 
+                (950, 50), 
+                font, 1, 
+                (0, 255, 255), 
+                2, 
+                cv2.LINE_4)
+            cv2.putText(img, 
+                str_center_Hand, 
+                (950, 80), 
+                font, 1, 
+                (0, 255, 255), 
+                2, 
+                cv2.LINE_4)
+          
             for obj in objects:
-                posx1, posy1, posx2, posy2 = obj.get_rectangle()
-                if center_x > posx1 and center_x < posx2 and center_y > posy1 and center_y < posy2:
-                    objects.remove(obj)
+                 left, top, rigth, bott = obj.get_rectangle()
+                 if center_x > left and center_x < rigth and center_y > top and center_y < bott:
+                     objects.remove(obj)
 
     return objects

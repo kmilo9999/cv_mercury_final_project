@@ -25,8 +25,8 @@ class game_object:
         self.position = self.position + self.direction * self.speed
 
     def get_rectangle(self):
-        posy2 = int(self.position[1]+self.text_width)
-        posx2 = int(self.position[0]+ self.text_height)
-        posx1 = int(self.position[0])
-        posy1 = int(self.position[1])
-        return posx1, posy1, posx2, posy2
+        top = int(self.position[0])
+        left = int(self.position[1])
+        right = int(self.position[1]+self.text_width)
+        bott = int(self.position[0]+ self.text_height)
+        return left, top, right, bott

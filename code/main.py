@@ -42,7 +42,7 @@ def main():
     graph, session = load_checkpoint()
 
     #init scene objects
-    for i in range(20):
+    for i in range(3):
         pos_x = np.random.randint(img_width//2)
         pos_y = np.random.randint(img_height//2)
         pos = np.array([pos_x,pos_y])
@@ -54,6 +54,7 @@ def main():
     alpha = 0.01
 
     # Read until video is completed
+    font = cv2.FONT_HERSHEY_SIMPLEX
     while(cap.isOpened()):
         # Capture frame-by-frame
         _, frame = cap.read()
@@ -67,8 +68,24 @@ def main():
         
         # Moves the object at random directions with 2D matrix where 1 is right and -1 is left
         for object in scene_objects:
+            posx1, posy1, posx2, posy2 = object.get_rectangle()
+            _posx1 = int(posx1)
+            _posy1 = int(posy1)
+            _posx2 = int(posx2) 
+            _posy2 = int(posy2)
+            strRes = "" + str(img_width) +","+str(img_height)
+            strPos ="" +str(_posx1)+","+str(_posy1)+" "+str(_posx2)+","+str(_posy2)
+            cv2.putText(frame, 
+                strRes+"\\n "+strPos, 
+                (50, 50), 
+                font, 1, 
+                (0, 255, 255), 
+                2, 
+                cv2.LINE_4)
+            cv2.rectangle(frame, (int(posx1), int(posy1)), (int(posx2), int(posy2)), (255, 255, 0), 2)
             object.draw(frame,alpha)
-
+       
+        
         # Display the resulting frame
         cv2.imshow('Hand Detection', frame)
 
