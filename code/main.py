@@ -5,6 +5,7 @@ import numpy as np
 from helpers.game_object import game_object
 import argparse
 import random
+import time
 
 from helpers.detector import load_checkpoint, detect_hands, collide_objects
 
@@ -42,12 +43,15 @@ def main():
     graph, session = load_checkpoint()
 
     #init scene objects
-    for i in range(3):
-        pos_x = np.random.randint(img_width//2)
-        pos_y = np.random.randint(img_height//2)
-        pos = np.array([pos_x,pos_y])
+    mosquito_texture = cv2.imread("../imgs/mosquito2.png")
+    print(mosquito_texture.shape)
+    offset =50
+    for i in range(6):
+        pos_x = np.random.randint(low= 100 , high= img_width - int(mosquito_texture.shape[1])    - 350 )
+        pos_y = np.random.randint(low= 100 , high= img_height - int(mosquito_texture.shape[0])   -  350)
+        pos = np.array([pos_y,pos_x])
         direction =  np.array([random.uniform(0, 1),random.uniform(0, 1)])
-        mosquito = game_object("../imgs/mosquito2.png",pos,direction)
+        mosquito = game_object(mosquito_texture,pos,direction)
         scene_objects.append(mosquito)
 
 
@@ -55,7 +59,21 @@ def main():
 
     # Read until video is completed
     font = cv2.FONT_HERSHEY_SIMPLEX
+    start = time.time()
+    time.clock() 
+    elapsed =0
+
     while(cap.isOpened()):
+        if elapsed >= 3:
+            pos_x = np.random.randint(low= 100 , high= img_width - int(mosquito_texture.shape[1])    - 350 )
+            pos_y = np.random.randint(low= 100 , high= img_height - int(mosquito_texture.shape[0])   -  350)
+            pos = np.array([pos_y,pos_x])
+            direction =  np.array([random.uniform(0, 1),random.uniform(0, 1)])
+            mosquito = game_object(mosquito_texture,pos,direction)
+            scene_objects.append(mosquito)
+            elapsed = 0
+            start = time.time()
+
         # Capture frame-by-frame
         _, frame = cap.read()
         
@@ -93,6 +111,7 @@ def main():
         if cv2.waitKey(25) & 0xFF == ord('q'):
             cv2.destroyAllWindows()
             break
+        elapsed = time.time() - start
 
 if __name__ == '__main__':
     main()

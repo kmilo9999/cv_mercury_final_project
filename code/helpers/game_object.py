@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 
 class game_object:
-    def __init__(self, texture_path,position,direction):
-        self.texture = cv2.imread(texture_path)
+    def __init__(self, texture,position,direction):
+        self.texture = texture
         self.text_width = int(self.texture.shape[1])
         self.text_height = int(self.texture.shape[0])
         self.position = position
