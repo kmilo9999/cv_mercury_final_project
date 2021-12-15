@@ -47,8 +47,8 @@ def main():
     print(mosquito_texture.shape)
     offset =50
     for i in range(6):
-        pos_x = np.random.randint(low= 100 , high= img_width - int(mosquito_texture.shape[1])    - 350 )
-        pos_y = np.random.randint(low= 100 , high= img_height - int(mosquito_texture.shape[0])   -  350)
+        pos_x = np.random.randint(low= 100 , high= img_width - int(mosquito_texture.shape[1])    - 150 )
+        pos_y = np.random.randint(low= 100 , high= img_height - int(mosquito_texture.shape[0])   -  100)
         pos = np.array([pos_y,pos_x])
         direction =  np.array([random.uniform(0, 1),random.uniform(0, 1)])
         mosquito = game_object(mosquito_texture,pos,direction)
@@ -65,8 +65,8 @@ def main():
 
     while(cap.isOpened()):
         if elapsed >= 3:
-            pos_x = np.random.randint(low= 100 , high= img_width - int(mosquito_texture.shape[1])    - 350 )
-            pos_y = np.random.randint(low= 100 , high= img_height - int(mosquito_texture.shape[0])   -  350)
+            pos_x = np.random.randint(low= 100 , high= img_width - int(mosquito_texture.shape[1])    - 50 )
+            pos_y = np.random.randint(low= 100 , high= img_height - int(mosquito_texture.shape[0])   -  50)
             pos = np.array([pos_y,pos_x])
             direction =  np.array([random.uniform(0, 1),random.uniform(0, 1)])
             mosquito = game_object(mosquito_texture,pos,direction)
