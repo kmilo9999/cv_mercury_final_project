@@ -17,3 +17,7 @@ The file structure is  like this before generating tfrecords:
 The final file structure should look like this:
 
 ![file structure](/file_structure.png?raw=true "File Structure")
+
+### How to: 
+4. Run the hand detection interactive game using the weights generated from our trained model:
+Navigate to code directory, run `python main.py`

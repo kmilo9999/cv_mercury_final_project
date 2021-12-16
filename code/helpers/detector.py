@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-CHKPOINT_PATH = 'C:\\Users\\Kmilo\\Documents\\cs1430\\cv_mercury_final_project\\code\\handtracking\\hand_inference\\frozen_inference_graph.pb'
+CHKPOINT_PATH = '/Users/yueshanli/Dropbox/My Mac (yueshans-air-2.devices.brown.edu)/Desktop/Fall_21/cs1430/cv_mercury_final_project/code/handtracking/hand_inference/frozen_inference_graph.pb'
 
 def load_checkpoint():
     """
